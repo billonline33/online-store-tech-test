@@ -22,14 +22,7 @@ const Header = () => {
         />
       </svg>
       <div className={styles.shoppingBag}>
-        <IconButton
-          aria-label="cart"
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          <ShoppingBagTwoToneIcon />
-        </IconButton>
+        <ShoppingBagTwoToneIcon />
         <span>x4</span>
       </div>
     </header >
