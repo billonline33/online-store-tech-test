@@ -9,14 +9,10 @@ import Divider from "@mui/material/Divider";
 import CartItem from "@/components/CartItem/CartItem";
 
 const CartOverlay = (props) => {
-  const { isOpen, closeModal } = props;
+  const { isOpen, closeModal, cartItems, onQuantityChange, onDeleteItem } =
+    props;
   const [open, setOpen] = useState(isOpen);
-  const onDelete = () => {
-    console.log("delete clicked");
-  };
-  const onQuantityChange = () => {
-    console.log("quantity changed");
-  };
+
   React.useEffect(() => {
     setOpen(props?.isOpen);
   }, [props]);
@@ -57,42 +53,50 @@ const CartOverlay = (props) => {
             Cart
           </Typography>
           <Divider />
-          <CartItem
-            productName="Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"
-            pricePerItem={100}
-            productImageUrl="https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
-            onDelete={onDelete}
-            onQuantityChange={onQuantityChange}
-          />
-          <Divider />
-          <CartItem
-            productName="Mens Casual Premium Slim Fit T-Shirts"
-            pricePerItem={100}
-            productImageUrl="https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg"
-            onDelete={onDelete}
-            onQuantityChange={onQuantityChange}
-          />
-          <Divider />
-          <CartItem
-            productName="Mens Cotton Jacket"
-            pricePerItem={100}
-            productImageUrl="https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg"
-            onDelete={onDelete}
-            onQuantityChange={onQuantityChange}
-          />
-          <Divider />
-          <Button
-            variant="contained"
-            sx={{
-              width: "100%",
-              bgcolor: "#16A34A",
-              fontWeight: "bold",
-              textTransform: "none",
-              borderRadius: "10px",
-            }}
-          >
-            Check Out
-          </Button>
+          {cartItems &&
+            cartItems.map((item, index) => {
+              return (
+                <div key={item.productId}>
+                  <CartItem
+                    productId={item.productId}
+                    productName={item.productName}
+                    pricePerItem={item.pricePerItem}
+                    productImageUrl={item.productImageUrl}
+                    onDelete={onDeleteItem}
+                    onQuantityChange={(newQuantity) =>
+                      onQuantityChange(item.productId, newQuantity)
+                    }
+                    quantity={item.quantity}
+                  />
+                  <Divider />
+                </div>
+              );
+            })}
+          {!cartItems || cartItems.length === 0 ? (
+            <Typography
+              component="p"
+              id="modal-desc"
+              level="body1"
+              textColor="inherit"
+              fontWeight="md"
+              mt={2}
+            >
+              The cart is empty
+            </Typography>
+          ) : (
+            <Button
+              variant="contained"
+              sx={{
+                width: "100%",
+                bgcolor: "#16A34A",
+                fontWeight: "bold",
+                textTransform: "none",
+                borderRadius: "10px",
+              }}
+            >
+              Check Out
+            </Button>
+          )}
         </Sheet>
       </Modal>
     </React.Fragment>

@@ -4,8 +4,15 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import ProductPageItem from "@/components/ProductPageItem/ProductPageItem";
 import IconButton from "@mui/material/IconButton";
+import DialogTitle from "@mui/material/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
 import { ShoppingBag } from "lucide-react";
 import CartOverlay from "@/components/CartOverlay/CartOverlay";
+import { addItem, changeQuantity, deleteItem } from "@/helper/cartHelper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,6 +55,9 @@ const Header = (cartClicked) => {
 
 export default function Home({ items }) {
   const [openCart, setOpenCart] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [cart, setCart] = useState([]);
+
   return (
     <>
       <Head>
@@ -57,7 +67,33 @@ export default function Home({ items }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <CartOverlay isOpen={openCart} closeModal={() => setOpenCart(false)} />
+        <CartOverlay
+          isOpen={openCart}
+          closeModal={() => setOpenCart(false)}
+          cartItems={cart}
+          onQuantityChange={(id, quantity) =>
+            setCart((prev) => changeQuantity(id, quantity, prev))
+          }
+          onDeleteItem={(itemId) => setCart((prev) => deleteItem(itemId, prev))}
+        />
+        <Dialog
+          open={openPopup}
+          onClose={() => setOpenPopup(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Item Added"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              The item has been added to the cart.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenPopup(false)} autoFocus>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
         {Header(() => setOpenCart(true))}
         <div className={styles.titleContainer}>Fake Products</div>
         <div>
@@ -65,13 +101,15 @@ export default function Home({ items }) {
             return (
               <ProductPageItem
                 key={index}
+                productId={item.id}
                 productName={item.title}
                 pricePerItem={item.price}
                 productImageUrl={item.image}
                 rating={item.rating.rate}
                 count={item.rating.count}
-                onAddToCart={() => {
-                  console.log("add to cart clicked");
+                onAddToCart={(item) => {
+                  setCart((prev) => addItem(item, prev));
+                  setOpenPopup(true);
                 }}
               />
             );

@@ -4,6 +4,7 @@ import styles from "./ProdutPageItem.module.css";
 
 const ProductPageItem = (props) => {
   const {
+    productId,
     productName,
     pricePerItem,
     productImageUrl,
@@ -37,7 +38,9 @@ const ProductPageItem = (props) => {
           textTransform: "none",
           borderRadius: "10px",
         }}
-        onClick={onAddToCart}
+        onClick={() =>
+          onAddToCart({ productId, productName, pricePerItem, productImageUrl })
+        }
       >
         Add to Cart
       </Button>
