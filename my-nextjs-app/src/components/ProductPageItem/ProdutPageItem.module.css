@@ -1,0 +1,35 @@
+.productContainer {
+  width: 378px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.productImageBox {
+  border: 1px solid #eff0f3;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.productImage {
+  width: 213px;
+  padding: 10px;
+}
+
+.productDescription {
+  padding: 10px 0 10px 0;
+  text-align: left;
+  font-size: 14px;
+  color: #707784;
+}
+
+.productPrice {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0 16px 0;
+}
+
+.productPrice span {
+  font-size: 18px;
+  font-weight: 600;
+}
